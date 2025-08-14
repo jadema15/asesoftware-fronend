@@ -10,6 +10,7 @@ import { ServicioDto } from 'src/app/models/ServicioDto';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { TurnoService } from 'src/app/services/turno.service';
 import { LoadingService } from 'src/app/services/loading.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-turnos',
@@ -28,7 +29,7 @@ export class TurnosComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
 
-  constructor(private readonly fb: FormBuilder, private readonly http: HttpClient, private readonly comercioService: ComercioService, private readonly servicioService: ServicioService, readonly turnoSerice: TurnoService, private readonly loadingService: LoadingService) {}
+  constructor(private readonly fb: FormBuilder, private readonly http: HttpClient, private readonly comercioService: ComercioService, private readonly servicioService: ServicioService, readonly turnoSerice: TurnoService, private readonly loadingService: LoadingService, private readonly toastr: ToastrService) {}
 
   public filtrosForm: FormGroup = this.fb.group({
       comercio: [null, Validators.required],
@@ -41,7 +42,7 @@ export class TurnosComponent implements OnInit {
 
   ngOnInit(): void {    
     this.cargarComercios();
-    this.cargarServicios();    
+    this.cargarServicios();   
   }
 
   cargarComercios(): void {
@@ -73,12 +74,19 @@ export class TurnosComponent implements OnInit {
   }
 
 
-  registrarTurno(filtros: any): void {
-    this.turnoSerice.postTurnos(filtros).subscribe(x=>{     
-        this.cargarTurnos();
-        this.borrarFormulario();
-    })
-  }
+registrarTurno(filtros: any): void {
+  this.turnoSerice.postTurnos(filtros).subscribe(
+    response => {
+      this.mostrarMensajeExito();
+      this.cargarTurnos();
+      this.borrarFormulario();
+    },
+    error => {
+      this.mostrarMensajeError();
+    }
+  );
+}
+
 
   borrarFormulario(){
     this.filtrosForm.reset();
@@ -95,7 +103,14 @@ export class TurnosComponent implements OnInit {
        this.hasError = false;
     }   
   }
-  
+
+  mostrarMensajeExito() {
+    this.toastr.success('Operación exitosa', 'Éxito');   
+  }
+
+  mostrarMensajeError() {
+    this.toastr.error('Se ha presentado un error', 'Error');   
+  }  
 }
 
 export function fechaRangoValido(): ValidatorFn {

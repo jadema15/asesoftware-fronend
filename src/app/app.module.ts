@@ -21,6 +21,7 @@ import { MatSelectModule } from '@angular/material/select';
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoadingInterceptor } from './interceptors/loading.interceptor';
+import { ToastrModule } from 'ngx-toastr';
 
 
 
@@ -50,6 +51,7 @@ import { LoadingInterceptor } from './interceptors/loading.interceptor';
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    ToastrModule.forRoot(),
   ],
   providers: [ {
       provide: HTTP_INTERCEPTORS,
