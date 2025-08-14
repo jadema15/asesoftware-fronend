@@ -1,3 +1,4 @@
+
 <div class="container mt-4">
     <div class="container mt-2">
         <h1 style="text-align: center;">Gestión de Turnos - Asesoftware</h1>
@@ -20,6 +21,10 @@
                     <mat-select formControlName="servicio">
                         <mat-option *ngFor="let s of servicios" [value]="s.idServicio">{{ s.nomServicio }}</mat-option>
                     </mat-select>
+                    <!-- Mensaje de error si no se selecciona un servicio -->
+                        <mat-error *ngIf="filtrosForm.get('servicio')?.hasError('required') && filtrosForm.get('servicio')?.touched">
+                        El servicio es obligatorio
+                        </mat-error>
                 </mat-form-field>
             </div>
         </div>
@@ -29,17 +34,29 @@
             <div class="col-md-6">
                 <mat-form-field appearance="fill" class="w-100">
                     <mat-label>Fecha Inicio</mat-label>
-                    <input matInput [matDatepicker]="pickerInicio" formControlName="fechaInicio">
+                    <input matInput [matDatepicker]="pickerInicio" formControlName="fechaInicio" (dateChange)="onFechaFinChange($event)">
                     <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
                     <mat-datepicker #pickerInicio></mat-datepicker>
+                     <!-- Mensaje de error -->
+                    <mat-error *ngIf="
+                        filtrosForm.hasError('rangoFechasInvalido') &&
+                        filtrosForm.get('fechaFin')?.touched">
+                        La fecha fin debe ser posterior a la fecha inicio.
+                    </mat-error>
                 </mat-form-field>
             </div>
             <div class="col-md-6">
                 <mat-form-field appearance="fill" class="w-100">
                     <mat-label>Fecha Fin</mat-label>
-                    <input matInput [matDatepicker]="pickerFin" formControlName="fechaFin">
+                    <input matInput [matDatepicker]="pickerFin" formControlName="fechaFin" (dateChange)="onFechaFinChange($event)">
                     <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
                     <mat-datepicker #pickerFin></mat-datepicker>
+                     <!-- Mensaje de error -->
+                    <mat-error *ngIf="
+                        filtrosForm.hasError('rangoFechasInvalido') &&
+                        filtrosForm.get('fechaFin')?.touched">
+                        La fecha fin debe ser posterior a la fecha inicio.
+                    </mat-error>
                 </mat-form-field>
             </div>
         </div>

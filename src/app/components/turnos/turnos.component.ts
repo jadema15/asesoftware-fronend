@@ -7,8 +7,9 @@ import { ComercioService } from 'src/app/services/comercio.service';
 import { ComercioDto } from 'src/app/models/ComercioDto';
 import { ServicioService } from 'src/app/services/servicio.service';
 import { ServicioDto } from 'src/app/models/ServicioDto';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { TurnoService } from 'src/app/services/turno.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-turnos',
@@ -21,20 +22,24 @@ export class TurnosComponent implements OnInit {
   public comercios: ComercioDto[] = [];
   public servicios: ServicioDto[] = [];
 
+  isLoading = true;
+  hasError = false;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
 
-  constructor(private readonly fb: FormBuilder, private readonly http: HttpClient, private readonly comercioService: ComercioService, private readonly servicioService: ServicioService, readonly turnoSerice: TurnoService) {}
+  constructor(private readonly fb: FormBuilder, private readonly http: HttpClient, private readonly comercioService: ComercioService, private readonly servicioService: ServicioService, readonly turnoSerice: TurnoService, private readonly loadingService: LoadingService) {}
 
   public filtrosForm: FormGroup = this.fb.group({
-  comercio: [null],
-  servicio: [null],
-  fechaInicio: [null],
-  fechaFin: [null],
+      comercio: [null, Validators.required],
+      servicio: [null, Validators.required],
+      fechaInicio: [null, Validators.required],
+      fechaFin: [null, Validators.required],
+      validators: [fechaRangoValido()]
 });
 
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
     this.cargarComercios();
     this.cargarServicios();    
   }
@@ -59,6 +64,10 @@ export class TurnosComponent implements OnInit {
   }
 
   onGenerar(){
+    if (this.filtrosForm.invalid) {
+      this.filtrosForm.markAllAsTouched(); 
+      return; 
+    }
     const filtros = this.filtrosForm!.value;
     this.registrarTurno(filtros);
   }
@@ -67,7 +76,37 @@ export class TurnosComponent implements OnInit {
   registrarTurno(filtros: any): void {
     this.turnoSerice.postTurnos(filtros).subscribe(x=>{     
         this.cargarTurnos();
+        this.borrarFormulario();
     })
   }
 
+  borrarFormulario(){
+    this.filtrosForm.reset();
+  }
+
+  onFechaFinChange(e: any){
+    const fechaInicio = this.filtrosForm.controls['fechaInicio'].value;
+    const fechaFinal = e.target.value
+    if(fechaFinal<fechaInicio){
+      console.log("Error en fechas");
+      this.hasError = true;
+    }else{
+      console.log("Fechas correctas");
+       this.hasError = false;
+    }   
+  }
+  
+}
+
+export function fechaRangoValido(): ValidatorFn {
+  return (form: AbstractControl): ValidationErrors | null => {
+    const fechaInicio = form.get('fechaInicio')?.value;
+    const fechaFin = form.get('fechaFin')?.value;
+
+    if (fechaInicio && fechaFin && fechaFin < fechaInicio) {
+      return { rangoFechasInvalido: true };
+    }
+
+    return null;
+  };
 }

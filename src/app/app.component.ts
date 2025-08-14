@@ -8,16 +8,12 @@ import { TurnoService } from './services/turno.service';
 })
 export class AppComponent implements OnInit {
   title = 'asesoftware-app';
-  constructor(private readonly turnoService: TurnoService){
+  public isLoading = true;
+  constructor(){
 
   }
   ngOnInit(): void {
-    this.cargarDatos();
+      console.log("Iniciando Aplicacion");
   }
 
-  cargarDatos(){
-    this.turnoService.getTurnos().subscribe(x=>{
-    console.log(x);
-})
-  }
 }
