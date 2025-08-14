@@ -1,0 +1,10 @@
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+
+.mat-responsive-table {
+  width: 100%;
+  min-width: 600px;
+}
