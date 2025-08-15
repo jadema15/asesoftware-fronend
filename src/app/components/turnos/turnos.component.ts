@@ -42,7 +42,6 @@ export class TurnosComponent implements OnInit {
 
   ngOnInit(): void {    
     this.cargarComercios();
-    this.cargarServicios();   
   }
 
   cargarComercios(): void {
@@ -57,6 +56,17 @@ export class TurnosComponent implements OnInit {
     })
   }
 
+  cargarServiciosByComercio(e: any): void { 
+    const id_comercio = e.value
+    this.servicioService.getServiciosByComercio(id_comercio).subscribe(servicio=>{
+      if(servicio.length>0){
+          this.servicios = servicio; 
+      }else{
+          this.servicios = [];      
+      }           
+    })
+  }
+
   cargarTurnos(): void {
     this.turnoSerice.getTurnos().subscribe(data=>{
        this.dataSource.data = data;
@@ -68,9 +78,10 @@ export class TurnosComponent implements OnInit {
     if (this.filtrosForm.invalid) {
       this.filtrosForm.markAllAsTouched(); 
       return; 
-    }
+    }  
     const filtros = this.filtrosForm!.value;
     this.registrarTurno(filtros);
+    
   }
 
 

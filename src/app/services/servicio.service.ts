@@ -16,5 +16,10 @@ export class ServicioService {
     getServicios(): Observable<ServicioDto[]> {
       return this.http.get<ServicioDto[]>(`${this.baseUrl}/servicio`);
     }  
+
+
+    getServiciosByComercio(id:number): Observable<ServicioDto[]> {
+      return this.http.get<ServicioDto[]>(`${this.baseUrl}/servicio/comercio/${id}`);
+    }
   
 }
