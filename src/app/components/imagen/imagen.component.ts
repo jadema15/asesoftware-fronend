@@ -16,7 +16,6 @@ export class ImagenComponent implements OnInit {
 
   ejecutar(e: Event){
     console.log("se presiono el boton");
-   // e.preventDefault();
     const valorEnviado = "Es un valor enviado";
     this.enviarSaludo(valorEnviado);
   }

@@ -85,7 +85,7 @@ export class TurnosComponent implements OnInit {
       this.filtrosForm.markAllAsTouched(); 
       return; 
     }  
-    const filtros = this.filtrosForm!.value;
+    const filtros = this.filtrosForm.value;
     this.registrarTurno(filtros);    
   }
 

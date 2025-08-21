@@ -74,7 +74,10 @@
 
 
     <div class="table-container mat-elevation-z8">
-        <table mat-table [dataSource]="dataSource" class="mat-responsive-table mat-table">
+        
+        <!-- Tabla de resultados turnos -->
+        <table mat-table [dataSource]="dataSource" class="mat-responsive-table mat-table"
+            aria-label="Listado de turnos asignados a los usuarios">
 
             <!-- Servicio Column -->
             <ng-container matColumnDef="id_comercio">
@@ -120,5 +123,5 @@
         <app-tarjeta [valor]="55" [comercios]="comercios"></app-tarjeta>
     </div>
     <br>
-     <mat-divider></mat-divider>
+    <mat-divider></mat-divider>
 </div>
