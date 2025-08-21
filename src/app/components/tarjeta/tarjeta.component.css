@@ -8,3 +8,28 @@ mat-card {
   flex: 1 1 30%; /* cada card ocupa aprox 30% del ancho */
   max-width: 30%;
 }
+
+.example-card {
+  max-width: 400px;
+}
+
+.example-header-image {
+  background-image: url('https://material.angular.dev/assets/img/examples/shiba1.jpg');
+  background-size: cover;
+}
+
+.cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.col {
+  flex: 1;
+}

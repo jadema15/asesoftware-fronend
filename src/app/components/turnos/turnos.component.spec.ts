@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TurnosComponent } from './turnos.component';
 import { SharedTestingModule } from 'src/app/shared/shared-test-module';
 import { TurnoService } from 'src/app/services/turno.service';
+import { TarjetaComponent } from '../tarjeta/tarjeta.component';
 
 describe('TurnosComponent', () => {
   let component: TurnosComponent;
@@ -11,7 +12,7 @@ describe('TurnosComponent', () => {
   beforeEach(() => {
 
     TestBed.configureTestingModule({
-      declarations: [TurnosComponent], 
+      declarations: [TurnosComponent, TarjetaComponent, ], 
       imports: [SharedTestingModule ]         
     });
     fixture = TestBed.createComponent(TurnosComponent);

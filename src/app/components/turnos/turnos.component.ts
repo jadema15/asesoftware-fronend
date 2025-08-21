@@ -45,7 +45,7 @@ export class TurnosComponent implements OnInit {
 
   ngOnInit(): void {    
     this.cargarComercios();
-    //this.cargarTurnos();
+    this.cargarTurnos();
   }
 
   cargarComercios(): void {
