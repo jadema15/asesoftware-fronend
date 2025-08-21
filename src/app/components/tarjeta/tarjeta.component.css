@@ -1,0 +1,10 @@
+.cards-container {
+  display: flex;
+  justify-content: space-between; /* separa igual */
+  gap: 16px; /* espacio entre cards */
+}
+
+mat-card {
+  flex: 1 1 30%; /* cada card ocupa aprox 30% del ancho */
+  max-width: 30%;
+}

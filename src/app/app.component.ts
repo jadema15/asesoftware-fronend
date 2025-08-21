@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { TurnoService } from './services/turno.service';
 
 @Component({
   selector: 'app-root',

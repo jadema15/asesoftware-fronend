@@ -10,7 +10,10 @@ import { ServicioDto } from 'src/app/models/ServicioDto';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { TurnoService } from 'src/app/services/turno.service';
 import { LoadingService } from 'src/app/services/loading.service';
-import { ToastrService } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr'; 
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
+
 
 @Component({
   selector: 'app-turnos',
@@ -29,7 +32,7 @@ export class TurnosComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
 
-  constructor(private readonly fb: FormBuilder, private readonly http: HttpClient, private readonly comercioService: ComercioService, private readonly servicioService: ServicioService, readonly turnoSerice: TurnoService, private readonly loadingService: LoadingService, private readonly toastr: ToastrService) {}
+  constructor(private readonly fb: FormBuilder, private readonly http: HttpClient, private readonly comercioService: ComercioService, private readonly servicioService: ServicioService, readonly turnoSerice: TurnoService, private readonly loadingService: LoadingService, private readonly toastr: ToastrService, private readonly dialog: MatDialog) {}
 
   public filtrosForm: FormGroup = this.fb.group({
       comercio: [null, Validators.required],
@@ -42,10 +45,13 @@ export class TurnosComponent implements OnInit {
 
   ngOnInit(): void {    
     this.cargarComercios();
+    //this.cargarTurnos();
   }
 
   cargarComercios(): void {
+    console.log("aqui el metodo");
     this.comercioService.getComercios().subscribe(comercio=>{
+      console.log("aqui resultado de comercios", comercio);
       this.comercios = comercio;      
     }) 
   }
@@ -80,28 +86,49 @@ export class TurnosComponent implements OnInit {
       return; 
     }  
     const filtros = this.filtrosForm!.value;
-    this.registrarTurno(filtros);
-    
+    this.registrarTurno(filtros);    
   }
 
 
 registrarTurno(filtros: any): void {
-  this.turnoSerice.postTurnos(filtros).subscribe(
-    response => {
+  this.turnoSerice.postTurnos(filtros).subscribe({
+    next: () => {
       this.mostrarMensajeExito();
       this.cargarTurnos();
       this.borrarFormulario();
     },
-    error => {
+    error: () => {
       this.mostrarMensajeError();
     }
-  );
+  });
 }
 
 
-  borrarFormulario(){
+hasTurnos():boolean{
+  return this.dataSource.data.length>0;
+}
+
+
+eliminarTurnos(): void {
+    if (this.hasTurnos()) {
+      this.turnoSerice.deleteTurnos().subscribe({
+        next: () => {
+          this.mostrarMensajeInformacion();
+          this.cargarTurnos();
+          this.borrarFormulario();
+        },
+        error: (err) => {
+          console.error(err); 
+          this.mostrarMensajeError();
+        }
+      });
+    }
+}
+
+borrarFormulario(){
     this.filtrosForm.reset();
-  }
+    this.dataSource.data=[];
+}
 
   onFechaFinChange(e: any){
     const fechaInicio = this.filtrosForm.controls['fechaInicio'].value;
@@ -119,10 +146,37 @@ registrarTurno(filtros: any): void {
     this.toastr.success('Operación exitosa', 'Éxito');   
   }
 
+    mostrarMensajeInformacion() {
+    this.toastr.info('Datos eliminados con éxito', 'Información');   
+  }
+
+  modalEliminarTurno() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        message: '¿Estás seguro de que quieres eliminar los turnos?',
+        title: 'Confirmar eliminación'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {       
+        this.eliminarTurnos();
+        console.log('Turnos eliminados');      
+      } else {       
+        console.log('Cancelado');
+      }
+    });
+  }
+
   mostrarMensajeError() {
     this.toastr.error('Se ha presentado un error', 'Error');   
   }  
+
+  getToUpperCase(text: string): string{
+    return text.toUpperCase();
+  }
 }
+
 
 export function fechaRangoValido(): ValidatorFn {
   return (form: AbstractControl): ValidationErrors | null => {

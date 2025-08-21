@@ -26,4 +26,8 @@ postTurnos(filtros: any): Observable<TurnoDto[]> {
     }
   return this.http.post<TurnoDto[]>(`${this.baseUrl}/turno`,  elemento);
   }
+
+  deleteTurnos(): Observable<TurnoDto[]> {   
+  return this.http.delete<TurnoDto[]>(`${this.baseUrl}/turno`);
+  }
 }

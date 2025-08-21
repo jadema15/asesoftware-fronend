@@ -14,6 +14,7 @@ export class ComercioService {
     constructor(private readonly http: HttpClient) { }
   
     getComercios(): Observable<ComercioDto[]> {
+      console.log(`${this.baseUrl}/comercio`);
       return this.http.get<ComercioDto[]>(`${this.baseUrl}/comercio`);
     }
 }
