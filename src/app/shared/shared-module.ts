@@ -16,7 +16,8 @@ import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatDividerModule } from '@angular/material/divider'
+import { MatDividerModule } from '@angular/material/divider';
+import {MatMenuModule} from '@angular/material/menu';
 
 @NgModule({
   imports: [
@@ -36,7 +37,9 @@ import { MatDividerModule } from '@angular/material/divider'
     RouterModule,
     MatButtonModule,
     MatCardModule,
-    MatDividerModule,
+    MatDividerModule,      
+    MatMenuModule,
+
   ],
   exports: [
     ReactiveFormsModule,
@@ -55,7 +58,8 @@ import { MatDividerModule } from '@angular/material/divider'
     RouterModule,
     MatButtonModule,
     MatCardModule,
-    MatDividerModule
+    MatDividerModule,    
+    MatMenuModule,
   ],
 })
 export class SharedModule {}

@@ -1,4 +1,11 @@
 <div class="container mt-4">
+
+    <button matButton [matMenuTriggerFor]="menu">Menu</button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="cambiar()">Item 1</button>
+        <button mat-menu-item>Item 2</button>
+    </mat-menu>
+
     <div class="container mt-2">
         <h1 style="text-align: center;">Gestión de Turnos - Asesoftware</h1>
     </div>
@@ -74,7 +81,7 @@
 
 
     <div class="table-container mat-elevation-z8">
-        
+
         <!-- Tabla de resultados turnos -->
         <table mat-table [dataSource]="dataSource" class="mat-responsive-table mat-table"
             aria-label="Listado de turnos asignados a los usuarios">
@@ -119,9 +126,9 @@
 
     <mat-divider></mat-divider>
 
-    <div style="margin-top: 16px;">
-        <app-tarjeta [valor]="55" [comercios]="comercios"></app-tarjeta>
-    </div>
+   <!--  <div style="margin-top: 16px;">
+        <app-tarjeta [comercios]="comercios"></app-tarjeta>
+    </div> -->
     <br>
     <mat-divider></mat-divider>
 </div>

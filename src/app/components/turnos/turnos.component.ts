@@ -13,7 +13,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { ToastrService } from 'ngx-toastr'; 
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
-
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-turnos',
@@ -32,7 +32,7 @@ export class TurnosComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
 
-  constructor(private readonly fb: FormBuilder, private readonly http: HttpClient, private readonly comercioService: ComercioService, private readonly servicioService: ServicioService, readonly turnoSerice: TurnoService, private readonly loadingService: LoadingService, private readonly toastr: ToastrService, private readonly dialog: MatDialog) {}
+  constructor(private readonly fb: FormBuilder, private readonly http: HttpClient, private readonly comercioService: ComercioService, private readonly servicioService: ServicioService, readonly turnoSerice: TurnoService, private readonly loadingService: LoadingService, private readonly toastr: ToastrService, private readonly dialog: MatDialog, private readonly router: Router) {}
 
   public filtrosForm: FormGroup = this.fb.group({
       comercio: [null, Validators.required],
@@ -174,6 +174,12 @@ borrarFormulario(){
 
   getToUpperCase(text: string): string{
     return text.toUpperCase();
+  }
+
+  cambiar(){
+    console.log("aqui se dio clic");
+    this.router.navigate(['/tarjetas']); 
+
   }
 }
 
