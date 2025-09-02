@@ -9,11 +9,11 @@ import { ServicioService } from 'src/app/services/servicio.service';
 import { ServicioDto } from 'src/app/models/ServicioDto';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { TurnoService } from 'src/app/services/turno.service';
-import { LoadingService } from 'src/app/services/loading.service';
-import { ToastrService } from 'ngx-toastr'; 
+import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
 import { Router } from '@angular/router';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-turnos',
@@ -25,6 +25,7 @@ export class TurnosComponent implements OnInit {
   dataSource = new MatTableDataSource<TurnoDto>();
   public comercios: ComercioDto[] = [];
   public servicios: ServicioDto[] = [];
+  public fullName?: string;
 
   isLoading = true;
   hasError = false;
@@ -32,84 +33,97 @@ export class TurnosComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
 
-  constructor(private readonly fb: FormBuilder, private readonly http: HttpClient, private readonly comercioService: ComercioService, private readonly servicioService: ServicioService, readonly turnoSerice: TurnoService, private readonly loadingService: LoadingService, private readonly toastr: ToastrService, private readonly dialog: MatDialog, private readonly router: Router) {}
+  constructor(private readonly fb: FormBuilder, private readonly http: HttpClient, private readonly comercioService: ComercioService, private readonly loginService: LoginService, private readonly servicioService: ServicioService, readonly turnoSerice: TurnoService, private readonly toastr: ToastrService, private readonly dialog: MatDialog, private readonly router: Router) { }
 
   public filtrosForm: FormGroup = this.fb.group({
-      comercio: [null, Validators.required],
-      servicio: [null, Validators.required],
-      fechaInicio: [null, Validators.required],
-      fechaFin: [null, Validators.required],
-      validators: [fechaRangoValido()]
-});
+    comercio: [null, Validators.required],
+    servicio: [null, Validators.required],
+    fechaInicio: [null, Validators.required],
+    fechaFin: [null, Validators.required],
+    validators: [fechaRangoValido()]
+  });
 
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.cargarComercios();
     this.cargarTurnos();
+    this.getListUsers();
+  }
+
+  getListUsers() {
+    this.loginService.getListUser().subscribe({
+      next: (resp: any) => {
+        console.log("Valida aqui el listado de usuarios ", resp);
+        this.fullName = resp.data[2811].fullName;
+        console.log("full name ", this.fullName);
+      }, error: (error: Error) => {
+        console.log("este es un error", error);
+      }
+    })
   }
 
   cargarComercios(): void {
     console.log("aqui el metodo");
-    this.comercioService.getComercios().subscribe(comercio=>{
+    this.comercioService.getComercios().subscribe(comercio => {
       console.log("aqui resultado de comercios", comercio);
-      this.comercios = comercio;      
-    }) 
-  }
-
-  cargarServicios(): void {
-    this.servicioService.getServicios().subscribe(servicio=>{
-      this.servicios = servicio;        
+      this.comercios = comercio;
     })
   }
 
-  cargarServiciosByComercio(e: any): void { 
+  cargarServicios(): void {
+    this.servicioService.getServicios().subscribe(servicio => {
+      this.servicios = servicio;
+    })
+  }
+
+  cargarServiciosByComercio(e: any): void {
     const id_comercio = e.value
-    this.servicioService.getServiciosByComercio(id_comercio).subscribe(servicio=>{
-      if(servicio.length>0){
-          this.servicios = servicio; 
-      }else{
-          this.servicios = [];      
-      }           
+    this.servicioService.getServiciosByComercio(id_comercio).subscribe(servicio => {
+      if (servicio.length > 0) {
+        this.servicios = servicio;
+      } else {
+        this.servicios = [];
+      }
     })
   }
 
   cargarTurnos(): void {
-    this.turnoSerice.getTurnos().subscribe(data=>{
-       this.dataSource.data = data;
-       this.dataSource.paginator = this.paginator;      
+    this.turnoSerice.getTurnos().subscribe(data => {
+      this.dataSource.data = data;
+      this.dataSource.paginator = this.paginator;
     })
   }
 
-  onGenerar(){
+  onGenerar() {
     if (this.filtrosForm.invalid) {
-      this.filtrosForm.markAllAsTouched(); 
-      return; 
-    }  
+      this.filtrosForm.markAllAsTouched();
+      return;
+    }
     const filtros = this.filtrosForm.value;
-    this.registrarTurno(filtros);    
+    this.registrarTurno(filtros);
   }
 
 
-registrarTurno(filtros: any): void {
-  this.turnoSerice.postTurnos(filtros).subscribe({
-    next: () => {
-      this.mostrarMensajeExito();
-      this.cargarTurnos();
-      this.borrarFormulario();
-    },
-    error: () => {
-      this.mostrarMensajeError();
-    }
-  });
-}
+  registrarTurno(filtros: any): void {
+    this.turnoSerice.postTurnos(filtros).subscribe({
+      next: () => {
+        this.mostrarMensajeExito();
+        this.cargarTurnos();
+        this.borrarFormulario();
+      },
+      error: () => {
+        this.mostrarMensajeError();
+      }
+    });
+  }
 
 
-hasTurnos():boolean{
-  return this.dataSource.data.length>0;
-}
+  hasTurnos(): boolean {
+    return this.dataSource.data.length > 0;
+  }
 
 
-eliminarTurnos(): void {
+  eliminarTurnos(): void {
     if (this.hasTurnos()) {
       this.turnoSerice.deleteTurnos().subscribe({
         next: () => {
@@ -118,36 +132,36 @@ eliminarTurnos(): void {
           this.borrarFormulario();
         },
         error: (err) => {
-          console.error(err); 
+          console.error(err);
           this.mostrarMensajeError();
         }
       });
     }
-}
+  }
 
-borrarFormulario(){
+  borrarFormulario() {
     this.filtrosForm.reset();
-    this.dataSource.data=[];
-}
+    this.dataSource.data = [];
+  }
 
-  onFechaFinChange(e: any){
+  onFechaFinChange(e: any) {
     const fechaInicio = this.filtrosForm.controls['fechaInicio'].value;
     const fechaFinal = e.target.value
-    if(fechaFinal<fechaInicio){
+    if (fechaFinal < fechaInicio) {
       console.log("Error en fechas");
       this.hasError = true;
-    }else{
+    } else {
       console.log("Fechas correctas");
-       this.hasError = false;
-    }   
+      this.hasError = false;
+    }
   }
 
   mostrarMensajeExito() {
-    this.toastr.success('Operación exitosa', 'Éxito');   
+    this.toastr.success('Operación exitosa', 'Éxito');
   }
 
-    mostrarMensajeInformacion() {
-    this.toastr.info('Datos eliminados con éxito', 'Información');   
+  mostrarMensajeInformacion() {
+    this.toastr.info('Datos eliminados con éxito', 'Información');
   }
 
   modalEliminarTurno() {
@@ -159,26 +173,26 @@ borrarFormulario(){
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result === true) {       
+      if (result === true) {
         this.eliminarTurnos();
-        console.log('Turnos eliminados');      
-      } else {       
+        console.log('Turnos eliminados');
+      } else {
         console.log('Cancelado');
       }
     });
   }
 
   mostrarMensajeError() {
-    this.toastr.error('Se ha presentado un error', 'Error');   
-  }  
+    this.toastr.error('Se ha presentado un error', 'Error');
+  }
 
-  getToUpperCase(text: string): string{
+  getToUpperCase(text: string): string {
     return text.toUpperCase();
   }
 
-  cambiar(){
+  cambiar() {
     console.log("aqui se dio clic");
-    this.router.navigate(['/tarjetas']); 
+    this.router.navigate(['/tarjetas']);
 
   }
 }

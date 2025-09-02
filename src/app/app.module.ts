@@ -7,10 +7,10 @@ import { TurnosComponent } from './components/turnos/turnos.component';
 
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { LoadingInterceptor } from './interceptors/loading.interceptor';
 import { SharedModule } from './shared/shared-module';
 import { TarjetaComponent } from './components/tarjeta/tarjeta.component';
 import { ImagenComponent } from './components/imagen/imagen.component';
+import { TokenInterceptor } from 'src/interceptor/token.interceptor';
 
 
 
@@ -26,11 +26,9 @@ import { ImagenComponent } from './components/imagen/imagen.component';
     SharedModule,
     HttpClientModule 
   ],
-  providers: [ {
-      provide: HTTP_INTERCEPTORS,
-      useClass: LoadingInterceptor,
-      multi: true
-    }],
+  providers: [{
+    provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
