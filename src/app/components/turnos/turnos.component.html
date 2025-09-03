@@ -3,7 +3,7 @@
     <button matButton [matMenuTriggerFor]="menu">Menu</button>
     <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="cambiar()">Item 1</button>
-        <button mat-menu-item>Item 2</button>
+        <button mat-menu-item (click)="salir()">Salir</button>
     </mat-menu>
 
     <div class="container mt-2">
@@ -17,7 +17,8 @@
                 <mat-form-field appearance="fill" class="w-100">
                     <mat-label>Comercio</mat-label>
                     <mat-select formControlName="comercio" (selectionChange)="cargarServiciosByComercio($event)">
-                        <mat-option *ngFor="let c of comercios" [value]="c.idComercio">{{ c.nomComercio }}</mat-option>
+                        <mat-option *ngFor="let c of comercios" [value]="c.idComercio">{{ c.nomComercio
+                            }}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -25,7 +26,8 @@
                 <mat-form-field appearance="fill" class="w-100">
                     <mat-label>Servicio</mat-label>
                     <mat-select formControlName="servicio">
-                        <mat-option *ngFor="let s of servicios" [value]="s.idServicio">{{ s.nomServicio }}</mat-option>
+                        <mat-option *ngFor="let s of servicios" [value]="s.idServicio">{{ s.nomServicio
+                            }}</mat-option>
                     </mat-select>
                     <!-- Mensaje de error si no se selecciona un servicio -->
                     <mat-error
@@ -73,7 +75,8 @@
         <!-- Botón Generar -->
         <div style="display: flex; justify-content: center; gap: 16px; margin-top: 20px;">
             <button mat-raised-button color="primary" type="submit">Generar</button>
-            <button mat-raised-button color="warn" type="button" (click)="modalEliminarTurno()">Eliminar Turnos</button>
+            <button mat-raised-button color="warn" type="button" (click)="modalEliminarTurno()">Eliminar
+                Turnos</button>
         </div>
 
 
@@ -126,7 +129,7 @@
 
     <mat-divider></mat-divider>
 
-   <!--  <div style="margin-top: 16px;">
+    <!--  <div style="margin-top: 16px;">
         <app-tarjeta [comercios]="comercios"></app-tarjeta>
     </div> -->
     <br>

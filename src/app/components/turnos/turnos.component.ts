@@ -53,9 +53,7 @@ export class TurnosComponent implements OnInit {
   getListUsers() {
     this.loginService.getListUser().subscribe({
       next: (resp: any) => {
-        console.log("Valida aqui el listado de usuarios ", resp);
         this.fullName = resp.data[2811].fullName;
-        console.log("full name ", this.fullName);
       }, error: (error: Error) => {
         console.log("este es un error", error);
       }
@@ -63,9 +61,7 @@ export class TurnosComponent implements OnInit {
   }
 
   cargarComercios(): void {
-    console.log("aqui el metodo");
     this.comercioService.getComercios().subscribe(comercio => {
-      console.log("aqui resultado de comercios", comercio);
       this.comercios = comercio;
     })
   }
@@ -194,6 +190,12 @@ export class TurnosComponent implements OnInit {
     console.log("aqui se dio clic");
     this.router.navigate(['/tarjetas']);
 
+  }
+
+  salir() {
+    localStorage.removeItem('logData');
+    localStorage.removeItem('token');
+    this.router.navigate(['/']);
   }
 }
 

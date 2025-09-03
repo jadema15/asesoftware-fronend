@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/internal/Observable';
 import { environment } from 'src/enviroments/enviroments';
 
@@ -9,13 +10,13 @@ import { environment } from 'src/enviroments/enviroments';
 })
 export class LoginService {
 
-  constructor(private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient, private readonly router: Router) { }
 
-  getListUser(): Observable<any> {    
+  getListUser(): Observable<any> {
     return this.http.get(environment.apiUrlLogin + "UserApp/GetAllUsers")
   }
 
-  registerUser(): Observable<any>{
+  registerUser(): Observable<any> {
     const obj = {
       "emailId": "hola@hola.com",
       "fullName": "jairo",
@@ -25,11 +26,19 @@ export class LoginService {
   }
 
 
-   onLogin(login:any, password:any): Observable<any>{
+  onLogin(login: any, password: any): Observable<any> {
     const obj = {
-     "emailId": login,
-     "password":password
+      "emailId": login,
+      "password": password
     }
-    return this.http.post(environment.apiUrlLogin+'UserApp/login', obj);
+    return this.http.post(environment.apiUrlLogin + 'UserApp/login', obj);
+  }
+
+  logout() {
+    this.router.navigate(['/']);
+  }
+
+  redireccionar() {
+    this.router.navigate(['/turnos']);
   }
 }
