@@ -1,0 +1,65 @@
+<div class="container mt-4">
+    <app-menu></app-menu>
+
+    <div class="container mt-2">
+        <h1 class="text-center">Reportes Asamblea</h1>
+
+        <div class="card mt-4">
+            <div class="card-body d-flex justify-content-center gap-3">
+                <form [formGroup]="filtrosForm">
+                    <!-- Contenedor horizontal -->
+                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+
+                        <!-- Selector de pregunta con Angular Material -->
+                        <mat-form-field appearance="fill" style="min-width: 600px;">
+                            <mat-label>Seleccionar Pregunta</mat-label>
+                            <mat-select formControlName="pregunta">
+                                <mat-option *ngFor="let pregunta of listaPreguntas" [value]="pregunta.id">
+                                    {{ pregunta.pregunta }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <!-- Botón Descargar -->
+                        <button class="btn btn-primary" type="button" (click)="descargarExcelRespuestas()">
+                            Descargar
+                        </button>
+
+                        <!-- Botón Descargar Asistentes -->
+                        <button class="btn btn-secondary" type="button" (click)="descargarExcel()">
+                            Descargar Asistentes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <h1 class="text-center" style="margin-top: 3em;">Verificación Quórum</h1>
+         <div class="card mt-4">
+            <div class="card-body d-flex justify-content-center gap-3">
+                <form [formGroup]="filtrosForm">
+                    <!-- Contenedor horizontal -->
+                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">     
+                        [{{idConsecutivo}}]                
+                        <!-- Botón Descargar -->
+                      <button mat-raised-button color="secundary" type="submit" (click)="modalEliminarPregunta()">Iniciar</button>                       
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <h1 class="text-center" style="margin-top: 3em;">Asistencias</h1>
+         <div class="card mt-4">
+            <div class="card-body d-flex justify-content-center gap-3">
+                <form [formGroup]="filtrosForm">
+                    <!-- Contenedor horizontal -->
+                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">                                          
+                        <!-- Botón Descargar -->
+                      <button mat-raised-button color="secundary" type="submit" (click)="asistencias()">Asistencias</button>  
+                      <button mat-raised-button color="secundary" type="submit" (click)="propietarios()">Propietarios</button>                      
+                    </div>                    
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

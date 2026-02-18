@@ -1,0 +1,63 @@
+/* Centrar botones y espacio entre ellos */
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+/* Botones con altura consistente y ancho adaptable */
+.btn-si, .btn-no, .btn-clear, button[color="primary"] {
+    height: 50px;
+    min-width: 120px;
+    flex: 1 1 auto; /* Se adapta al ancho disponible */
+}
+
+/* Ajustes para h1 */
+.titulo-pregunta {
+    font-size: 1.5rem;
+    padding: 0 10px; /* evita que toque los bordes */
+}
+
+/* Container2 (resultados) en móviles */
+.container2 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.container2 .box {
+    flex: 1 1 120px; /* se adapta al ancho */
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f1f1f1;
+}
+
+/* Etiquetas de SI y NO */
+.label.si {
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+.label.no {
+    color: #FF0000;
+    font-weight: bold;
+}
+
+/* Media Query para pantallas pequeñas */
+@media (max-width: 480px) {
+    .btn-si, .btn-no, .btn-clear, button[color="primary"] {
+        font-size: 0.9rem;
+        height: 45px;
+    }
+    .titulo-pregunta {
+        font-size: 1.2rem;
+    }
+    .container2 .box {
+        flex: 1 1 100%; /* cada box toma toda la fila */
+    }
+}

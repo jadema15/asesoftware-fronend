@@ -1,5 +1,9 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:9090/api',
-  apiUrlLogin : 'https://api.freeprojectapi.com/api/'
+  
+  //apiUrl: 'https://192.168.128.3:9090/api', 
+  apiUrl: 'https://192.168.1.24:9090/api', 
+ //apiUrl:'http://localhost:9090/api',
 };
+
+ 

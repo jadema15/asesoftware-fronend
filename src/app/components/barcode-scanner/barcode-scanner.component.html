@@ -1,0 +1,17 @@
+<div class="scanner-container">
+ <zxing-scanner
+  [device]="selectedDevice"
+  (camerasFound)="onCamerasFound($event)"
+  (scanSuccess)="onScanSuccess($event)"
+  [formats]="allowedFormats" 
+  [tryHarder]="true"
+  [torch]="false">
+</zxing-scanner>
+
+<div *ngIf="scannedResult">
+  <p><strong>Código detectado:</strong> {{ scannedResult }}</p>
+</div>
+
+<div *ngIf="error" class="error">{{ error }}</div>
+</div>
+

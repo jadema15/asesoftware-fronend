@@ -1,0 +1,8 @@
+/* Estilo para todos los encabezados de la tabla */
+table.mat-table th.mat-header-cell {
+  background-color: #1976d2; /* color de fondo azul */
+  color: white;              /* color de letra */
+  font-weight: bold;         /* opcional, resaltar texto */
+  text-align: center;        /* opcional, centrar texto */
+  font-size: 14px;           /* opcional, tamaño de letra */
+}

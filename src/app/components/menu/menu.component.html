@@ -1,0 +1,18 @@
+<button matButton [matMenuTriggerFor]="menu">
+    <mat-icon>menu</mat-icon>
+</button>
+
+<mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="registrar()">Registro Asistencia</button>
+    <button mat-menu-item (click)="cambiar()">Quorum</button>
+    <button mat-menu-item (click)="preguntas()" *ngIf="mostrarBoton">Preguntas</button>
+    <button mat-menu-item (click)="votacion()">Votación</button>
+    <button mat-menu-item (click)="verificacion()">Verificación Quorum</button>
+    <button mat-menu-item (click)="salir()">Salir Asamblea</button>
+    <mat-divider></mat-divider>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="configuracion()" *ngIf="mostrarBoton">Configuración</button>
+     <mat-divider></mat-divider>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="cerrarSesion()">Cerrar Sesión</button>
+</mat-menu>

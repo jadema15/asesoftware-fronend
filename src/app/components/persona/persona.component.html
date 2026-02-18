@@ -1,0 +1,107 @@
+<div class="container mt-4">
+    <app-menu></app-menu>
+    <div class="container mt-2">
+        <h1 style="text-align: center;">Propietarios</h1>
+    </div>
+
+    <div class="table-container mat-elevation-z8 mt-5">
+
+        <!-- Tabla de resultados turnos -->
+        <table mat-table [dataSource]="dataSource" class="mat-responsive-table mat-table" aria-label="Preguntas">
+
+            <!-- Servicio Column -->
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef style="background-color:#1976d2; color:white;"> N° </th>
+                <td mat-cell *matCellDef="let p; let i = index"> {{ i + 1 }} </td>
+            </ng-container>
+
+            <!-- Servicio Column -->
+            <ng-container matColumnDef="primerApellido">
+                <th mat-header-cell *matHeaderCellDef style="background-color:#1976d2; color:white;">
+                    Primer Apellido
+                    <div>
+                        <input matInput placeholder="Filtrar" (keyup)="aplicarFiltroPrimerApellido($event)"
+                            (click)="$event.stopPropagation()" />
+                    </div>
+                </th>
+                <td mat-cell *matCellDef="let p">
+                    {{ p.primerApellido }}
+                </td>
+            </ng-container>
+
+
+            <!-- Fecha Turno Column -->
+            <!-- Servicio Column -->
+            <ng-container matColumnDef="segundoApellido">
+                <th mat-header-cell *matHeaderCellDef style="background-color:#1976d2; color:white;"> Segundo Apellido </th>
+                <td mat-cell *matCellDef="let p"> {{ p.segundoApellido }} </td>
+            </ng-container>
+
+            <!-- Servicio Column -->
+            <ng-container matColumnDef="primerNombre">
+                <th mat-header-cell *matHeaderCellDef style="background-color:#1976d2; color:white;">
+                    Primer Nombre
+                    <div>
+                        <input matInput placeholder="Filtrar" (keyup)="aplicarFiltroPrimerNombre($event)"
+                            (click)="$event.stopPropagation()" />
+                    </div>
+                </th>
+                <td mat-cell *matCellDef="let p">
+                    {{ p.primerNombre }}
+                </td>
+            </ng-container>
+
+            <!-- Servicio Column -->
+            <ng-container matColumnDef="segundoNombre">
+                <th mat-header-cell *matHeaderCellDef style="background-color:#1976d2; color:white;"> Segundo Nombre </th>
+                <td mat-cell *matCellDef="let p"> {{ p.segundoNombre }} </td>
+            </ng-container>
+
+            <!-- Servicio Column -->
+            <ng-container matColumnDef="tipoDocumento">
+                <th mat-header-cell *matHeaderCellDef style="background-color:#1976d2; color:white;"> Tipo Documento </th>
+                <td mat-cell *matCellDef="let p"> {{ p.tipoDocumento }} </td>
+            </ng-container>
+
+            <!-- Servicio Column -->
+            <ng-container matColumnDef="documento">
+                <th mat-header-cell *matHeaderCellDef style="background-color:#1976d2; color:white;">
+                    Documento
+                    <div>
+                        <input matInput placeholder="Filtrar" (keyup)="aplicarFiltroDocumento($event)" />
+                    </div>
+                </th>
+                <td mat-cell *matCellDef="let p">
+                    {{ p.documento }}
+                </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="coeficiente">
+                <th mat-header-cell *matHeaderCellDef style="background-color:#1976d2; color:white;"> Coeficiente </th>
+                <td mat-cell *matCellDef="let p"> {{ p.coeficiente }} </td>
+            </ng-container>
+
+           <!-- Servicio Column -->
+            <ng-container matColumnDef="propiedad">
+                <th mat-header-cell *matHeaderCellDef style="background-color:#1976d2; color:white;">
+                    Propiedad
+                    <div>
+                        <input matInput placeholder="Filtrar" (keyup)="aplicarFiltroPropiedad($event)"
+                            (click)="$event.stopPropagation()" />
+                    </div>
+                </th>
+                <td mat-cell *matCellDef="let p">
+                    {{ p.propiedad }}
+                </td>
+            </ng-container>
+
+            <!-- Header and Row Definitions -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSize]="20" [pageSizeOptions]="[20, 50, 100]"></mat-paginator>
+    </div>
+    <div class="mt-5"></div>
+</div>

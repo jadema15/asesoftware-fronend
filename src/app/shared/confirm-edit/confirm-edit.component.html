@@ -1,0 +1,20 @@
+<div class="container mt-4">
+    <h2 mat-dialog-title>{{ data.title || 'Confirmación' }}</h2>
+    <mat-dialog-content>
+        <div class="row">
+            <form [formGroup]="filtrosForm">
+                <div class="col-md-12 mb-5">
+                    <mat-form-field appearance="fill" class="w-100">
+                        <mat-label>Pregunta</mat-label>
+                        <input matInput placeholder="Ingrese la pregunta" formControlName="pregunta">
+                    </mat-form-field>
+                </div>
+            </form>
+        </div>
+
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button (click)="onNo()">Cancelar</button>
+        <button mat-raised-button color="primary" (click)="onYes()">Actualizar</button>
+    </mat-dialog-actions>
+</div>

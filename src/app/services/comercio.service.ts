@@ -10,11 +10,11 @@ import { Observable } from 'rxjs/internal/Observable';
 export class ComercioService {
 
   private readonly baseUrl = environment.apiUrl;
-  
-    constructor(private readonly http: HttpClient) { }
-  
-    getComercios(): Observable<ComercioDto[]> {
-      console.log(`${this.baseUrl}/comercio`);
-      return this.http.get<ComercioDto[]>(`${this.baseUrl}/comercio`);
-    }
+
+  constructor(private readonly http: HttpClient) { }
+
+  getComercios(): Observable<ComercioDto[]> {
+    console.log(`${this.baseUrl}/comercio`);
+    return this.http.get<ComercioDto[]>(`${this.baseUrl}/comercio`);
+  }
 }

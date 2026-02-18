@@ -1,93 +1,61 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { HttpClient } from '@angular/common/http';
-import { TurnoDto } from 'src/app/models/TurnoDto';
-import { ComercioService } from 'src/app/services/comercio.service';
-import { ComercioDto } from 'src/app/models/ComercioDto';
-import { ServicioService } from 'src/app/services/servicio.service';
-import { ServicioDto } from 'src/app/models/ServicioDto';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TurnoService } from 'src/app/services/turno.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
 import { Router } from '@angular/router';
-import { LoginService } from 'src/app/services/login.service';
+import { AsistenciaService } from 'src/app/services/asistencia.service';
+import { LoadingService } from 'src/app/services/loading.service';
+import { QuorumService } from 'src/app/services/quorum.service';
 
 @Component({
   selector: 'app-turnos',
   templateUrl: './turnos.component.html',
   styleUrls: ['./turnos.component.css']
 })
-export class TurnosComponent implements OnInit {
-  displayedColumns: string[] = ['id_comercio', 'id_servicio', 'fecha_turno', 'hora_inicio', 'hora_fin'];
-  dataSource = new MatTableDataSource<TurnoDto>();
-  public comercios: ComercioDto[] = [];
-  public servicios: ServicioDto[] = [];
+export class TurnosComponent {
+
   public fullName?: string;
 
   isLoading = true;
   hasError = false;
+  hasDetalle = false;
+  nombrePropietario: string = "";
+  totalCoeficiente: number = 0;
+  propiedades: any[] = [];
+  public asistencia: number = 0.0;
+  verificacion: boolean = false;
+  titulo!: string;
+
+  beepOk = new Audio('assets/sound/beep.mp3');
+  beepError = new Audio('assets/sound/error.mp3');
+  beepWarnError = new Audio('assets/sound/error2.mp3');
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
 
-  constructor(private readonly fb: FormBuilder, private readonly http: HttpClient, private readonly comercioService: ComercioService, private readonly loginService: LoginService, private readonly servicioService: ServicioService, readonly turnoSerice: TurnoService, private readonly toastr: ToastrService, private readonly dialog: MatDialog, private readonly router: Router) { }
+  constructor(private readonly fb: FormBuilder, readonly turnoSerice: TurnoService, readonly quorumSerice: QuorumService, private readonly toastr: ToastrService, private readonly dialog: MatDialog, private readonly router: Router, private readonly asistenciaService: AsistenciaService, private readonly loadingService: LoadingService) {
+    this.verificacion = Boolean(localStorage.getItem('verifacion'));
+    this.titulo = "Registro de asistencia asamblea";
+  }
 
   public filtrosForm: FormGroup = this.fb.group({
-    comercio: [null, Validators.required],
-    servicio: [null, Validators.required],
-    fechaInicio: [null, Validators.required],
-    fechaFin: [null, Validators.required],
-    validators: [fechaRangoValido()]
+    documento: [null, Validators.required]
   });
 
+  lastScannedCode: string | null = null;
 
-  ngOnInit(): void {
-    this.cargarComercios();
-    this.cargarTurnos();
-    this.getListUsers();
-  }
+  onCodeScanned(code: string) {
+    this.lastScannedCode = code; // Guardamos el valor
+    const documentoReal = Number(this.lastScannedCode)/3;
+    console.log("documento real" , documentoReal);
+    this.filtrosForm.controls['documento'].setValue(documentoReal);
+    const filtros = this.filtrosForm.value;
 
-  getListUsers() {
-    this.loginService.getListUser().subscribe({
-      next: (resp: any) => {
-        this.fullName = resp.data[2811].fullName;
-      }, error: (error: Error) => {
-        console.log("este es un error", error);
-      }
-    })
-  }
+    this.registrarAsistencia(filtros);
 
-  cargarComercios(): void {
-    this.comercioService.getComercios().subscribe(comercio => {
-      this.comercios = comercio;
-    })
-  }
-
-  cargarServicios(): void {
-    this.servicioService.getServicios().subscribe(servicio => {
-      this.servicios = servicio;
-    })
-  }
-
-  cargarServiciosByComercio(e: any): void {
-    const id_comercio = e.value
-    this.servicioService.getServiciosByComercio(id_comercio).subscribe(servicio => {
-      if (servicio.length > 0) {
-        this.servicios = servicio;
-      } else {
-        this.servicios = [];
-      }
-    })
-  }
-
-  cargarTurnos(): void {
-    this.turnoSerice.getTurnos().subscribe(data => {
-      this.dataSource.data = data;
-      this.dataSource.paginator = this.paginator;
-    })
   }
 
   onGenerar() {
@@ -96,68 +64,52 @@ export class TurnosComponent implements OnInit {
       return;
     }
     const filtros = this.filtrosForm.value;
-    this.registrarTurno(filtros);
+
+    this.registrarAsistencia(filtros);
   }
 
 
-  registrarTurno(filtros: any): void {
-    this.turnoSerice.postTurnos(filtros).subscribe({
-      next: () => {
-        this.mostrarMensajeExito();
-        this.cargarTurnos();
-        this.borrarFormulario();
-      },
-      error: () => {
-        this.mostrarMensajeError();
-      }
-    });
-  }
-
-
-  hasTurnos(): boolean {
-    return this.dataSource.data.length > 0;
-  }
-
-
-  eliminarTurnos(): void {
-    if (this.hasTurnos()) {
-      this.turnoSerice.deleteTurnos().subscribe({
-        next: () => {
-          this.mostrarMensajeInformacion();
-          this.cargarTurnos();
+  registrarAsistencia(filtros: any): void {
+    this.loadingService.show();
+    this.hasDetalle = false;
+      this.turnoSerice.postAsistencia(filtros).subscribe({
+        next: (respuesta: any) => {
+          this.totalCoeficiente = respuesta.totalCoeficiente;
+          if (respuesta.estadoMensaje == 0) {
+            this.cargarAsistencia();
+            this.mostrarMensajeExito();
+            this.hasDetalle = true;
+            this.mostrarDetalle(respuesta!.personaDto);
+            this.beepOk.play();
+          } else if (respuesta.estadoMensaje == 1) {
+            this.mostrarMensajeInformacion(respuesta.mensaje, "Información");
+            this.beepWarnError.play();
+          } else {
+            this.mostrarMensajeAdvertencia(respuesta.mensaje, "Advertencia");
+            this.beepError.play();
+          }
+          this.loadingService.hide();
           this.borrarFormulario();
         },
-        error: (err) => {
-          console.error(err);
-          this.mostrarMensajeError();
+        error: () => {
+          this.mostrarMensajeError("Error desconocido");
+          this.loadingService.hide();
         }
-      });
-    }
+      });    
+  }
+
+  mostrarDetalle(personaDtoList: any[]) {
+    this.nombrePropietario = personaDtoList[0].primerNombre + " " + personaDtoList[0].primerApellido;
+    this.propiedades = personaDtoList;
+    this.nombrePropietario = this.nombrePropietario.toUpperCase();
   }
 
   borrarFormulario() {
     this.filtrosForm.reset();
-    this.dataSource.data = [];
-  }
-
-  onFechaFinChange(e: any) {
-    const fechaInicio = this.filtrosForm.controls['fechaInicio'].value;
-    const fechaFinal = e.target.value
-    if (fechaFinal < fechaInicio) {
-      console.log("Error en fechas");
-      this.hasError = true;
-    } else {
-      console.log("Fechas correctas");
-      this.hasError = false;
-    }
   }
 
   mostrarMensajeExito() {
-    this.toastr.success('Operación exitosa', 'Éxito');
-  }
-
-  mostrarMensajeInformacion() {
-    this.toastr.info('Datos eliminados con éxito', 'Información');
+    this.toastr.success('Asistencia registrada exitosamente', 'Éxito');
   }
 
   modalEliminarTurno() {
@@ -169,46 +121,28 @@ export class TurnosComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result === true) {
-        this.eliminarTurnos();
-        console.log('Turnos eliminados');
-      } else {
-        console.log('Cancelado');
-      }
     });
   }
 
-  mostrarMensajeError() {
-    this.toastr.error('Se ha presentado un error', 'Error');
+  mostrarMensajeError(mensaje: string) {
+    this.toastr.error(mensaje, 'Se ha presentado un Error');
+  }
+
+  mostrarMensajeAdvertencia(mensaje: string, titulo: string) {
+    this.toastr.warning(mensaje, titulo);
+  }
+
+  mostrarMensajeInformacion(mensaje: string, titulo: string) {
+    this.toastr.info(mensaje, titulo);
   }
 
   getToUpperCase(text: string): string {
     return text.toUpperCase();
   }
 
-  cambiar() {
-    console.log("aqui se dio clic");
-    this.router.navigate(['/tarjetas']);
-
+  cargarAsistencia(): void {
+    this.asistenciaService.getAsistenciaIncial().subscribe(asistencia => {
+      this.asistencia = asistencia;
+    })
   }
-
-  salir() {
-    localStorage.removeItem('logData');
-    localStorage.removeItem('token');
-    this.router.navigate(['/']);
-  }
-}
-
-
-export function fechaRangoValido(): ValidatorFn {
-  return (form: AbstractControl): ValidationErrors | null => {
-    const fechaInicio = form.get('fechaInicio')?.value;
-    const fechaFin = form.get('fechaFin')?.value;
-
-    if (fechaInicio && fechaFin && fechaFin < fechaInicio) {
-      return { rangoFechasInvalido: true };
-    }
-
-    return null;
-  };
 }

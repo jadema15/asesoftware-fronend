@@ -10,16 +10,15 @@ import { ServicioDto } from '../models/ServicioDto';
 export class ServicioService {
 
   private readonly baseUrl = environment.apiUrl;
-  
-    constructor(private readonly http: HttpClient) { }
-  
-    getServicios(): Observable<ServicioDto[]> {
-      return this.http.get<ServicioDto[]>(`${this.baseUrl}/servicio`);
-    }  
+
+  constructor(private readonly http: HttpClient) { }
+
+  getServicios(): Observable<ServicioDto[]> {
+    return this.http.get<ServicioDto[]>(`${this.baseUrl}/servicio`);
+  }
 
 
-    getServiciosByComercio(id:number): Observable<ServicioDto[]> {
-      return this.http.get<ServicioDto[]>(`${this.baseUrl}/servicio/comercio/${id}`);
-    }
-  
+  getServiciosByComercio(id: number): Observable<ServicioDto[]> {
+    return this.http.get<ServicioDto[]>(`${this.baseUrl}/servicio/comercio/${id}`);
+  }
 }

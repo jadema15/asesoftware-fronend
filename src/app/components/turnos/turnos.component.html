@@ -1,137 +1,58 @@
 <div class="container mt-4">
-    <h4>Usuario: {{fullName}} </h4>
-    <button matButton [matMenuTriggerFor]="menu">Menu</button>
-    <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="cambiar()">Item 1</button>
-        <button mat-menu-item (click)="salir()">Salir</button>
-    </mat-menu>
+    <app-menu></app-menu>
 
     <div class="container mt-2">
-        <h1 style="text-align: center;">Gestión de Turnos - Asesoftware</h1>
+        <h1 style="text-align: center;">{{titulo}}</h1>
     </div>
     <form [formGroup]="filtrosForm" (ngSubmit)="onGenerar()">
 
+        <app-barcode-scanner (scanned)="onCodeScanned($event)"></app-barcode-scanner>
+
         <!-- Primera fila: Select Comercio y Select Servicio -->
         <div class="row mb-3">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <mat-form-field appearance="fill" class="w-100">
-                    <mat-label>Comercio</mat-label>
-                    <mat-select formControlName="comercio" (selectionChange)="cargarServiciosByComercio($event)">
-                        <mat-option *ngFor="let c of comercios" [value]="c.idComercio">{{ c.nomComercio
-                            }}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="col-md-6">
-                <mat-form-field appearance="fill" class="w-100">
-                    <mat-label>Servicio</mat-label>
-                    <mat-select formControlName="servicio">
-                        <mat-option *ngFor="let s of servicios" [value]="s.idServicio">{{ s.nomServicio
-                            }}</mat-option>
-                    </mat-select>
-                    <!-- Mensaje de error si no se selecciona un servicio -->
-                    <mat-error
-                        *ngIf="filtrosForm.get('servicio')?.hasError('required') && filtrosForm.get('servicio')?.touched">
-                        El servicio es obligatorio
-                    </mat-error>
-                </mat-form-field>
-            </div>
-        </div>
-
-        <!-- Segunda fila: Fechas Inicio y Fin -->
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <mat-form-field appearance="fill" class="w-100">
-                    <mat-label>Fecha Inicio</mat-label>
-                    <input matInput [matDatepicker]="pickerInicio" formControlName="fechaInicio"
-                        (dateChange)="onFechaFinChange($event)">
-                    <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
-                    <mat-datepicker #pickerInicio></mat-datepicker>
-                    <!-- Mensaje de error -->
-                    <mat-error *ngIf="
-                        filtrosForm.hasError('rangoFechasInvalido') &&
-                        filtrosForm.get('fechaFin')?.touched">
-                        La fecha fin debe ser posterior a la fecha inicio.
-                    </mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-md-6">
-                <mat-form-field appearance="fill" class="w-100">
-                    <mat-label>Fecha Fin</mat-label>
-                    <input matInput [matDatepicker]="pickerFin" formControlName="fechaFin"
-                        (dateChange)="onFechaFinChange($event)">
-                    <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
-                    <mat-datepicker #pickerFin></mat-datepicker>
-                    <!-- Mensaje de error -->
-                    <mat-error *ngIf="
-                        filtrosForm.hasError('rangoFechasInvalido') &&
-                        filtrosForm.get('fechaFin')?.touched">
-                        La fecha fin debe ser posterior a la fecha inicio.
-                    </mat-error>
+                    <mat-label>Documento de Identidad</mat-label>
+                    <input matInput placeholder="Ingrese su numero de documento" formControlName="documento">
                 </mat-form-field>
             </div>
         </div>
 
         <!-- Botón Generar -->
         <div style="display: flex; justify-content: center; gap: 16px; margin-top: 20px;">
-            <button mat-raised-button color="primary" type="submit">Generar</button>
-            <button mat-raised-button color="warn" type="button" (click)="modalEliminarTurno()">Eliminar
-                Turnos</button>
+            <button mat-raised-button color="primary" type="submit">Registrar</button>
         </div>
 
-
     </form>
+    <div *ngIf="hasDetalle">
+        <div class="bienvenida">
+            <span class="titulo">Bienvenid@:</span>
+            <span class="nombre">{{nombrePropietario}}</span>
+        </div>
+        <div class="mt-5"></div>
 
-
-    <div class="table-container mat-elevation-z8">
-
-        <!-- Tabla de resultados turnos -->
-        <table mat-table [dataSource]="dataSource" class="mat-responsive-table mat-table"
-            aria-label="Listado de turnos asignados a los usuarios">
-
-            <!-- Servicio Column -->
-            <ng-container matColumnDef="id_comercio">
-                <th mat-header-cell *matHeaderCellDef> Comercio </th>
-                <td mat-cell *matCellDef="let turno"> {{ turno.servicio.comercio.nomComercio }} </td>
-            </ng-container>
-
-            <!-- Servicio Column -->
-            <ng-container matColumnDef="id_servicio">
-                <th mat-header-cell *matHeaderCellDef> Servicio </th>
-                <td mat-cell *matCellDef="let turno"> {{ turno.servicio.nomServicio }} </td>
-            </ng-container>
-
-            <!-- Fecha Turno Column -->
-            <ng-container matColumnDef="fecha_turno">
-                <th mat-header-cell *matHeaderCellDef> Fecha Turno </th>
-                <td mat-cell *matCellDef="let turno"> {{ turno.fechaTurno | date }} </td>
-            </ng-container>
-
-            <!-- Hora Inicio Column -->
-            <ng-container matColumnDef="hora_inicio">
-                <th mat-header-cell *matHeaderCellDef> Hora Inicio </th>
-                <td mat-cell *matCellDef="let turno"> {{ turno.horaInicio }} </td>
-            </ng-container>
-
-            <!-- Hora Fin Column -->
-            <ng-container matColumnDef="hora_fin">
-                <th mat-header-cell *matHeaderCellDef> Hora Fin </th>
-                <td mat-cell *matCellDef="let turno"> {{ turno.horaFin }} </td>
-            </ng-container>
-
-            <!-- Header and Row Definitions -->
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-
-        <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
+        <div *ngFor="let p of propiedades; let i = index; let first = first; let last = last">
+            <mat-card class="card-horizontal">
+                <div class="card-content">
+                    <div><strong>N°:</strong> {{i + 1}}</div>
+                    <div><strong>Propiedad:</strong> {{ p.propiedad }}</div>
+                    <div><strong>Coeficiente:</strong> {{ p.coeficiente | number: '1.6-6' }}</div>
+                </div>
+            </mat-card>
+        </div>
+        <div>
+            <mat-card class="card-horizontal">
+                <div class="card-content">
+                    <div><strong>Total coeficiente:</strong> {{ totalCoeficiente | number: '1.6-6' }}</div>
+                </div>
+            </mat-card>
+        </div>
+        <div class="asistencia-container mt-5">
+            <mat-card class="asistencia-card">
+                <div class="asistencia-text">
+                    <div><strong>{{ asistencia | number: '1.2-2' }} %</strong></div>
+                </div>
+            </mat-card>
+        </div>
     </div>
-
-    <mat-divider></mat-divider>
-
-    <!--  <div style="margin-top: 16px;">
-        <app-tarjeta [comercios]="comercios"></app-tarjeta>
-    </div> -->
-    <br>
-    <mat-divider></mat-divider>
 </div>

@@ -1,0 +1,74 @@
+<div class="container mt-4">
+    <app-menu></app-menu>
+    <div class="container mt-2">
+        <h1 style="text-align: center;">Preguntas</h1>
+    </div>
+    <form [formGroup]="filtrosForm" (ngSubmit)="onGenerar()">
+
+        <!-- Primera fila: Select Comercio y Select Servicio -->
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Pregunta</mat-label>
+                    <input matInput placeholder="Ingrese la pregunta" formControlName="pregunta">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <!-- Botón Generar -->
+        <div style="display: flex; justify-content: center; gap: 16px; margin-top: 20px;">
+            <button mat-raised-button color="primary" type="submit">Registrar</button>
+        </div>
+    </form>
+
+    <div class="table-container mat-elevation-z8 mt-5">
+
+        <!-- Tabla de resultados turnos -->
+        <table mat-table [dataSource]="dataSource" class="mat-responsive-table mat-table" aria-label="Preguntas">
+
+            <!-- Servicio Column -->
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> N° </th>
+                <td mat-cell *matCellDef="let p; let i = index"> {{ i + 1 }} </td>
+            </ng-container>
+
+            <!-- Servicio Column -->
+            <ng-container matColumnDef="pregunta">
+                <th mat-header-cell *matHeaderCellDef> Pregunta </th>
+                <td mat-cell *matCellDef="let p"> {{ p.pregunta }} </td>
+            </ng-container>
+
+            <!-- Fecha Turno Column -->
+            <ng-container matColumnDef="estado">
+                <th mat-header-cell *matHeaderCellDef> Estado </th>
+                <td mat-cell *matCellDef="let p" [ngClass]="{
+                      'estado-activo': p.estado === 'activo',
+                      'estado-inactivo': p.estado === 'inactivo'
+                }" (click)="seleccionarPregunta(p)">
+                    {{ p.estado | uppercase }}
+                </td>
+
+            </ng-container>
+
+            <ng-container matColumnDef="acciones">
+                <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                <td mat-cell *matCellDef="let p">
+                    <div class="btn-group">
+                        <button mat-raised-button color="primary" type="button" (click)="modalEditarPregunta(p)">Editar</button>
+                        <button mat-raised-button color="warn" type="button"
+                            (click)="modalEliminarPregunta(p.id)">Eliminar</button>
+                        <button mat-raised-button class="btn-success" type="button" (click)="modalRespuesta(p)"
+                            >Resultados</button>
+                    </div>
+                </td>
+            </ng-container>
+
+            <!-- Header and Row Definitions -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
+    </div>
+    <div class="mt-5"></div>
+</div>

@@ -1,0 +1,18 @@
+.btn-group {
+  display: flex;
+  gap: 8px;
+}
+
+.estado-activo {
+  background-color: #006400;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+}
+
+.estado-inactivo {
+  background-color: #d3d3d3;
+  color: black;
+  font-weight: normal;
+  text-align: center;
+}

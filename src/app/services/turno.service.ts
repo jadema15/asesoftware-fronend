@@ -9,25 +9,25 @@ import { environment } from 'src/enviroments/enviroments';
 })
 export class TurnoService {
 
-private readonly baseUrl = environment.apiUrl;
+  private readonly baseUrl = environment.apiUrl;
 
   constructor(private readonly http: HttpClient) { }
 
-  getTurnos(): Observable<TurnoDto[]> {
-    return this.http.get<TurnoDto[]>(`${this.baseUrl}/turno`);
-  }
 
-
-postTurnos(filtros: any): Observable<TurnoDto[]> {
-    const elemento = {
-      fechaInicio: filtros.fechaInicio,
-      fechaFin: filtros.fechaFin,
-      idServicio: filtros.servicio
+  postAsistencia(filtros: any): Observable<TurnoDto[]> {
+    const body = {
+      documento: filtros.documento,
+      asambleaId: 1,
+      estado: 'activo',
     }
-  return this.http.post<TurnoDto[]>(`${this.baseUrl}/turno`,  elemento);
+    return this.http.post<any>(`${this.baseUrl}/asistencia`, body);
   }
 
-  deleteTurnos(): Observable<TurnoDto[]> {   
-  return this.http.delete<TurnoDto[]>(`${this.baseUrl}/turno`);
+
+  putAsistencia(filtros: any): Observable<TurnoDto[]> {
+    const body = {
+      documento: filtros.documento
+    }
+    return this.http.put<any>(`${this.baseUrl}/asistencia`, body);
   }
 }

@@ -1,0 +1,32 @@
+.texto-izquierda {
+  text-align: left;
+  font-weight: bold;
+}
+
+.descripcion {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.valor-coeficiente {
+  font-weight: bold;
+  margin-left: 10px;
+  transition: font-size 0.3s ease;
+}
+
+.texto-verde {
+  color: green;
+}
+
+.texto-rojo {
+  color: red;
+}
+
+/* Tamaños relativos */
+.mayor {
+  font-size: 2.5rem;
+}
+
+.menor {
+  font-size: 1.6rem;
+}

@@ -1,0 +1,35 @@
+<div class="container mt-4">
+    <h2 mat-dialog-title>Votación Pregunta</h2>
+    <mat-dialog-content>
+        <div class="row">
+            <div class="col-md-12 mb-5 texto-centrado">
+                {{ texto }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 mb-3 texto-izquierda">
+                <span class="descripcion">Votos SI:</span>
+                <span class="valor-coeficiente texto-verde" [ngClass]="{
+        'mayor': coeficienteSi! > coeficienteNo!,
+        'menor': coeficienteSi! < coeficienteNo!
+      }">
+                    {{ coeficienteSi | number: '1.2-2' }} %
+                </span>
+            </div>
+            <div class="col-md-12 mb-3 texto-izquierda">
+                <span class="descripcion">Votos NO:</span>
+                <span class="valor-coeficiente texto-rojo" [ngClass]="{
+        'mayor': coeficienteNo! > coeficienteSi!,
+        'menor': coeficienteNo! < coeficienteSi!
+      }">
+                    {{ coeficienteNo | number: '1.2-2' }} %
+                </span>
+            </div>
+        </div>
+
+
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-raised-button color="warn" type="button" (click)="onNo()">Cerrar</button>
+    </mat-dialog-actions>
+</div>

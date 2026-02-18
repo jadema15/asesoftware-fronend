@@ -9,6 +9,19 @@ import { SharedModule } from './shared/shared-module';
 import { TarjetaComponent } from './components/tarjeta/tarjeta.component';
 import { ImagenComponent } from './components/imagen/imagen.component';
 import { TokenInterceptor } from 'src/interceptor/token.interceptor';
+import { SalidaComponent } from './components/salida/salida.component';
+import { PreguntaComponent } from './components/pregunta/pregunta.component';
+import { MenuComponent } from './components/menu/menu.component';
+import { VotacionComponent } from './components/votacion/votacion.component';
+import { ConfirmEditComponent } from './shared/confirm-edit/confirm-edit.component';
+import { ConfirmResultadoComponent } from './shared/confirm-resultado/confirm-resultado.component';
+import { ConfiguracionComponent } from './components/configuracion/configuracion.component';
+import { LoadingComponent } from './shared/loading/loading.component';
+import { BarcodeScannerComponent } from './components/barcode-scanner/barcode-scanner.component';
+import { VerificacionComponent } from './components/verificacion/verificacion.component';
+import { PersonaComponent } from './components/persona/persona.component';
+import { AsistenciaComponent } from './components/asistencia/asistencia.component';
+
 
 
 
@@ -18,15 +31,14 @@ import { TokenInterceptor } from 'src/interceptor/token.interceptor';
     LoginComponent,
     TurnosComponent,
     TarjetaComponent, 
-    ImagenComponent,
+    ImagenComponent, SalidaComponent, PreguntaComponent, MenuComponent, VotacionComponent, ConfirmEditComponent, ConfirmResultadoComponent, ConfiguracionComponent, LoadingComponent, BarcodeScannerComponent, VerificacionComponent, PersonaComponent, AsistenciaComponent,
+    
   ],
   imports: [
     SharedModule,
     HttpClientModule 
   ],
-  providers: [{
-    provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true
-  }],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
