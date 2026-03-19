@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
@@ -21,24 +21,33 @@ import { BarcodeScannerComponent } from './components/barcode-scanner/barcode-sc
 import { VerificacionComponent } from './components/verificacion/verificacion.component';
 import { PersonaComponent } from './components/persona/persona.component';
 import { AsistenciaComponent } from './components/asistencia/asistencia.component';
+import { MonitorPreguntaComponent } from './components/monitor-pregunta/monitor-pregunta.component';
+import { ConfigService } from './services/config.service';
+import { ConfirmEditPersonaComponent } from './shared/confirm-edit-persona/confirm-edit-persona.component';
 
-
-
+export function initializeApp(configService: ConfigService) {
+  return () => configService.loadConfig();
+}
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     TurnosComponent,
-    TarjetaComponent, 
-    ImagenComponent, SalidaComponent, PreguntaComponent, MenuComponent, VotacionComponent, ConfirmEditComponent, ConfirmResultadoComponent, ConfiguracionComponent, LoadingComponent, BarcodeScannerComponent, VerificacionComponent, PersonaComponent, AsistenciaComponent,
-    
+    TarjetaComponent,
+    ImagenComponent, SalidaComponent, PreguntaComponent, MenuComponent, VotacionComponent, ConfirmEditComponent, ConfirmResultadoComponent, ConfiguracionComponent, LoadingComponent, BarcodeScannerComponent, VerificacionComponent, PersonaComponent, AsistenciaComponent, MonitorPreguntaComponent, ConfirmEditPersonaComponent,
+
   ],
   imports: [
     SharedModule,
-    HttpClientModule 
+    HttpClientModule
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }, {
+    provide: APP_INITIALIZER,
+    useFactory: initializeApp,
+    deps: [ConfigService],
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

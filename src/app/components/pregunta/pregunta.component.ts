@@ -11,6 +11,8 @@ import { ConfirmEditComponent } from 'src/app/shared/confirm-edit/confirm-edit.c
 import { VotacionService } from 'src/app/services/votacion.service';
 import { ConfirmResultadoComponent } from 'src/app/shared/confirm-resultado/confirm-resultado.component';
 import { LoadingService } from 'src/app/services/loading.service';
+import { Router } from '@angular/router';
+import { AsistenciaService } from 'src/app/services/asistencia.service';
 
 @Component({
   selector: 'app-pregunta',
@@ -28,12 +30,13 @@ export class PreguntaComponent implements OnInit {
   coeficienteNo: number = 0.00;
   coeficienteSi: number = 0.00;
   textoPregunta: string = "";
+  asistencia: number = 0.00;
 
- constructor(private readonly fb: FormBuilder, readonly votacionService: VotacionService, readonly preguntaService: PreguntaService, private readonly toastr: ToastrService, private readonly dialog: MatDialog, private readonly loadingService: LoadingService) { }
+  constructor(private readonly fb: FormBuilder, readonly votacionService: VotacionService, readonly preguntaService: PreguntaService, private readonly toastr: ToastrService, private readonly dialog: MatDialog, private readonly loadingService: LoadingService, private readonly router: Router, private readonly asistenciaService: AsistenciaService) { }
 
   ngOnInit(): void {
-    // Cargar datos iniciales
     this.cargarAsistencia();
+    this.cargarPreguntas();
   }
 
   public filtrosForm: FormGroup = this.fb.group({
@@ -56,7 +59,7 @@ export class PreguntaComponent implements OnInit {
         next: (respuesta: any) => {
           if (respuesta.id !== null) {
             this.mostrarMensajeExito("Pregunta registrada con éxito");
-            this.cargarAsistencia();
+            this.cargarPreguntas();
             this.loadingService.hide();
           }
           this.borrarFormulario();
@@ -76,7 +79,7 @@ export class PreguntaComponent implements OnInit {
         next: (respuesta: any) => {
           if (respuesta.id !== null) {
             this.mostrarMensajeExito("Pregunta Actualizada con éxito");
-            this.cargarAsistencia();
+            this.cargarPreguntas();
             this.loadingService.hide();
           }
           this.borrarFormulario();
@@ -89,7 +92,7 @@ export class PreguntaComponent implements OnInit {
     }
   }
 
-  cargarAsistencia(): void {
+  cargarPreguntas(): void {
     this.loadingService.show();
     this.preguntaService.getPreguntas().subscribe(preguntas => {
       this.dataSource.data = preguntas.sort((a, b) => a.id - b.id);
@@ -124,7 +127,7 @@ export class PreguntaComponent implements OnInit {
       next: (respuesta: any) => {
         if (respuesta) {
           this.mostrarMensajeExito("Pregunta eliminada por éxito");
-          this.cargarAsistencia();
+          this.cargarPreguntas();
           this.loadingService.hide();
         } else {
           this.loadingService.hide();
@@ -145,7 +148,8 @@ export class PreguntaComponent implements OnInit {
         if (respuesta) {
           this.mostrarMensajeExito("Pregunta seleccionada con éxito");
           // this.websocketService.enviarCambioEstado(id);
-          this.cargarAsistencia();
+          localStorage.setItem("preguntaId", String(id));
+          this.cargarPreguntas();
           this.loadingService.hide();
         }
       },
@@ -205,8 +209,8 @@ export class PreguntaComponent implements OnInit {
         const dialogRef = this.dialog.open(ConfirmResultadoComponent, {
           width: '50vw',
           data: {
-            coeficienteNo: this.coeficienteNo,
-            coeficienteSi: this.coeficienteSi,
+            coeficienteNo: this.coeficienteNo/this.asistencia,
+            coeficienteSi: this.coeficienteSi/this.asistencia,
             pregunta: this.textoPregunta
           }
         });
@@ -218,6 +222,21 @@ export class PreguntaComponent implements OnInit {
       error: () => {
         this.loadingService.hide();
         this.mostrarMensajeError("Error desconocido");
+      }
+    });
+  }
+
+  verMonitor() {
+    this.router.navigate(['/monitor']);
+  }
+
+  cargarAsistencia(): void {
+    this.asistenciaService.getAsistenciaIncial().subscribe({
+      next: (asistencia) => {
+        this.asistencia = asistencia;
+      },
+      error: () => {
+        console.log("Aqui error");
       }
     });
   }

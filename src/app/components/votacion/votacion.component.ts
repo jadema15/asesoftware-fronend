@@ -76,10 +76,10 @@ export class VotacionComponent implements OnInit {
               this.respuestaVotacion();
             } else {
               if (respuesta.estado == 1) {
-                this.mostrarMensajeAdvertencia("El documento ya ha registrado su voto anteriormente", "Advertencia");
+                this.mostrarMensajeAdvertencia(`El documento: ${validarDocumento} ya ha registrado su voto anteriormente`, "Advertencia");
                 this.beepWarnError.play();
               } else if (respuesta.estado == 2) {
-                this.mostrarMensajeAdvertencia("El documento ingresado no se encuentra registrado dentro de la asamblea", "Advertencia");
+                this.mostrarMensajeAdvertencia(`El documento: ${validarDocumento} ingresado no se encuentra registrado dentro de la asamblea`, "Advertencia");
                 this.beepError.play();
               } else {
                 this.mostrarMensajeError("Error desconocido");
@@ -95,7 +95,7 @@ export class VotacionComponent implements OnInit {
         });
       }
     } else {
-      this.mostrarMensajeAdvertencia("Debe seleccionar el voto masivo", "Advertencia");
+      this.mostrarMensajeAdvertencia("Debe seleccionar el voto sostenido", "Advertencia");
        this.loadignService.hide();
     }
   }

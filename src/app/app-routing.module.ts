@@ -12,6 +12,7 @@ import { noAuthGuard } from './services/no-auth.guard';
 import { VerificacionComponent } from './components/verificacion/verificacion.component';
 import { PersonaComponent } from './components/persona/persona.component';
 import { AsistenciaComponent } from './components/asistencia/asistencia.component';
+import { MonitorPreguntaComponent } from './components/monitor-pregunta/monitor-pregunta.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent, canActivate: [noAuthGuard] },
@@ -28,6 +29,7 @@ const routes: Routes = [
       { path: 'verificacion', component: VerificacionComponent },
       { path: 'persona', component: PersonaComponent },
       { path: 'asistencia', component: AsistenciaComponent },
+      { path: 'monitor', component: MonitorPreguntaComponent },
     ],
   },
   { path: '**', redirectTo: '', pathMatch: 'full' }

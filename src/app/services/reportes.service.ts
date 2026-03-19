@@ -1,24 +1,22 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from 'src/enviroments/enviroments';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReportesService {
 
-  private readonly baseUrl = environment.apiUrl;
-
-  constructor(private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient, private readonly configService: ConfigService) { }
 
   descargarExcel() {
-    return this.http.get(`${this.baseUrl}/reportes`, {
+    return this.http.get(`${this.configService.apiUrl}/reportes`, {
       responseType: 'blob'
     });
   }
 
   descargarExcelRespuestas(id: number) {
-    return this.http.get(`${this.baseUrl}/reportes/pregunta/${id}`, {
+    return this.http.get(`${this.configService.apiUrl}/reportes/pregunta/${id}`, {
       responseType: 'blob'
     });
   }

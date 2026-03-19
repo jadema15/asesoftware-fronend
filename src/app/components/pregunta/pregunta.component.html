@@ -54,11 +54,12 @@
                 <th mat-header-cell *matHeaderCellDef> Acciones </th>
                 <td mat-cell *matCellDef="let p">
                     <div class="btn-group">
-                        <button mat-raised-button color="primary" type="button" (click)="modalEditarPregunta(p)">Editar</button>
+                        <button mat-raised-button color="primary" type="button"
+                            (click)="modalEditarPregunta(p)">Editar</button>
                         <button mat-raised-button color="warn" type="button"
                             (click)="modalEliminarPregunta(p.id)">Eliminar</button>
-                        <button mat-raised-button class="btn-success" type="button" (click)="modalRespuesta(p)"
-                            >Resultados</button>
+                        <button mat-raised-button class="btn-success" type="button"
+                            (click)="modalRespuesta(p)">Resultados</button>
                     </div>
                 </td>
             </ng-container>
@@ -67,8 +68,10 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
-
         <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
     </div>
-    <div class="mt-5"></div>
+
+    <div class="mt-5">
+        <button mat-raised-button color="primary" (click)="verMonitor()" type="button">Monitor votación</button>
+    </div>
 </div>

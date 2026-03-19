@@ -1,0 +1,55 @@
+<div class="container mt-4">
+    <h2 mat-dialog-title>Actualizar Propietario</h2>
+    <mat-dialog-content>
+        <div class="row">
+            <form [formGroup]="filtrosForm">
+                <div class="col-md-12 mb-1">
+                    <mat-form-field appearance="fill" class="w-100">
+                        <mat-label>Primer nombre</mat-label>
+                        <input matInput placeholder="Ingrese el primer nombre" formControlName="primerNombre">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-12 mb-1">
+                    <mat-form-field appearance="fill" class="w-100">
+                        <mat-label>Segundo nombre</mat-label>
+                        <input matInput placeholder="Ingrese el segundo apellido" formControlName="segundoNombre">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-12 mb-1">
+                    <mat-form-field appearance="fill" class="w-100">
+                        <mat-label>Primer apellido</mat-label>
+                        <input matInput placeholder="Ingrese el primer apellido" formControlName="primerApellido">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-12 mb-1">
+                    <mat-form-field appearance="fill" class="w-100">
+                        <mat-label>Segundo apellido</mat-label>
+                        <input matInput placeholder="Ingrese el segundo apellido" formControlName="segundoApellido">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-12 mb-1">
+                    <mat-form-field appearance="fill" class="w-100">
+                        <mat-label>Documento</mat-label>
+                        <input matInput placeholder="Ingrese el documento" formControlName="documento">
+                    </mat-form-field>
+                </div>
+
+                 <div class="col-md-12 mb-1">
+                    <mat-form-field appearance="fill" class="w-100">
+                        <mat-label>Propiedad</mat-label>
+                        <input matInput placeholder="Ingrese la propiedad" formControlName="propiedad">
+                    </mat-form-field>
+                </div>
+            </form>
+        </div>
+
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button (click)="onNo()">Cancelar</button>
+        <button mat-raised-button color="primary" (click)="onYes()">Actualizar</button>
+    </mat-dialog-actions>
+</div>

@@ -1,0 +1,20 @@
+<div class="container mt-4">
+    <app-menu></app-menu>
+
+   <div class="container mt-2">
+        <h1 class="titulo-pregunta text-center">{{pregunta}}</h1>
+    </div> 
+
+   <div class="cards-container">
+  <div class="card si">
+    <div class="label">SI</div>
+    <div class="value">{{coeficienteSi | number: '1.2-2' }} %</div>
+  </div>
+
+  <div class="card no">
+    <div class="label">NO</div>
+    <div class="value">{{coeficienteNo | number: '1.2-2' }} %</div>
+  </div>
+</div>
+
+</div>

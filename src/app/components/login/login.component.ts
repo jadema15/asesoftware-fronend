@@ -25,9 +25,9 @@ export class LoginComponent {
      const { username, password } = this.loginForm.value;
      console.log(username, password);
     this.auth.login(username, password).subscribe({
-      next: (res: { token: string; }) => {
+      next: (res: { token: string, nivel:string; }) => {
         localStorage.setItem('token', res.token);
-        localStorage.setItem('levelUser',"1");
+        localStorage.setItem('levelUser',res.nivel);
         this.router.navigate(['/turnos']);
       },
       error: () => alert('Credenciales incorrectas')

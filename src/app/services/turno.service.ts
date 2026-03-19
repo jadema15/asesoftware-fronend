@@ -3,15 +3,16 @@ import { Observable } from 'rxjs/internal/Observable';
 import { TurnoDto } from '../models/TurnoDto';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/enviroments/enviroments';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TurnoService {
 
-  private readonly baseUrl = environment.apiUrl;
+  //private readonly baseUrl = environment.apiUrl;
 
-  constructor(private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient, private readonly configService: ConfigService) { }
 
 
   postAsistencia(filtros: any): Observable<TurnoDto[]> {
@@ -20,7 +21,7 @@ export class TurnoService {
       asambleaId: 1,
       estado: 'activo',
     }
-    return this.http.post<any>(`${this.baseUrl}/asistencia`, body);
+    return this.http.post<any>(`${this.configService.apiUrl}/asistencia`, body);
   }
 
 
@@ -28,6 +29,6 @@ export class TurnoService {
     const body = {
       documento: filtros.documento
     }
-    return this.http.put<any>(`${this.baseUrl}/asistencia`, body);
+    return this.http.put<any>(`${this.configService.apiUrl}/asistencia`, body);
   }
 }

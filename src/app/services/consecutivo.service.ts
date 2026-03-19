@@ -1,16 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from 'src/enviroments/enviroments';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConsecutivoService {
 
-    constructor(private readonly http: HttpClient) { }
+    constructor(private readonly http: HttpClient, private readonly configService: ConfigService) { }
   
-    private readonly baseUrl = environment.apiUrl;
+    private readonly baseUrl = this.configService.apiUrl;
   
     getIdConsecutivo(): Observable<number> {
       console.log(`${this.baseUrl}/consecutivo/id`);

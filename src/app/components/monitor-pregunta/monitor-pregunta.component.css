@@ -1,0 +1,51 @@
+.cards-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;  /* Centra horizontalmente */
+  align-items: center;      /* Centra verticalmente */
+  gap: 80px;                /* Más espacio entre tarjetas */
+  text-align: center;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 450px;
+  padding: 30px;
+  border-radius: 15px;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.card.si {
+  background-color: #28a745; /* Verde */
+}
+
+.card.no {
+  background-color: #dc3545; /* Rojo */
+}
+
+.card .label {
+  font-size: 5rem;
+  font-weight: bold;
+  margin-bottom: 30px;  /* Más espacio debajo de "SI"/"NO" */
+  line-height: 1.2;     /* Separación vertical interna */
+}
+
+.card .value {
+  font-size: 4rem;
+  font-weight: bold;
+  margin-top: 10px;     /* Espacio sobre el valor */
+  line-height: 1.2;
+}
+
+.titulo-pregunta {
+  font-size: 3rem;        /* Tamaño muy grande */
+  font-weight: 900;       /* Extra negrita */
+  text-align: center;     /* Centrado (por si no usas text-center) */
+  margin: 10px 0;         /* Espacio arriba y abajo */
+  line-height: 1.2;       /* Evita que se monte si es largo */
+}
+

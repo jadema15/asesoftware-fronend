@@ -47,6 +47,22 @@ export class ConfiguracionComponent implements OnInit {
     });
   }
 
+   descargarExcelInasistentes() {
+    this.loadingService.show();
+    this.reportesService.descargarExcel().subscribe(blob => {
+      const a = document.createElement('a');
+      const objectUrl = URL.createObjectURL(blob);
+      a.href = objectUrl;
+      a.download = 'inasistentes_asamblea.xlsx';
+      a.click();
+      URL.revokeObjectURL(objectUrl);
+      this.loadingService.hide();
+    }, error => {
+      console.error('Error al descargar el archivo:', error);
+      this.loadingService.hide();
+    });
+  }
+
   descargarExcelRespuestas() {
     this.loadingService.show();
     const id = this.filtrosForm.get('pregunta')?.value;
